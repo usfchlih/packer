@@ -9,7 +9,9 @@ import java.util.List;
  */
 public class TestCase {
 
+    // Weight limit in the test case.
     private Double weightLimit;
+    // List of Items in the test case.
     private List<Item> items = new ArrayList<>();
 
     public Double getWeightLimit() {

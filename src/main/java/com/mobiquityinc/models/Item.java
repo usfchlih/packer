@@ -2,6 +2,7 @@ package com.mobiquityinc.models;
 
 /**
  * Holds an item
+ *
  * @author ychlih
  */
 public class Item {
@@ -10,7 +11,19 @@ public class Item {
     private Integer index;
     private Double weight;
     private Double cost;
+    // (cost/weight)
+    private Double costWeightRatio;
 
+    public Item(Integer index, Double weight, Double cost) {
+        this.index = index;
+        this.weight = weight;
+        this.cost = cost;
+
+    }
+
+    public Item() {
+
+    }
 
     public Integer getIndex() {
         return index;
@@ -35,5 +48,14 @@ public class Item {
     public void setCost(Double cost) {
         this.cost = cost;
     }
+
+
+    public Double getCostWeightRatio() {
+        if (weight != 0) {
+            this.costWeightRatio = cost / weight;
+        }
+        return this.costWeightRatio;
+    }
+
 
 }

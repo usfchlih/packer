@@ -11,6 +11,9 @@ import static com.mobiquityinc.Utils.Parser.parseLine;
 public class ParserTest {
 
 
+    /**
+     * Test Parsing a String test Case  into TestCase Object
+     */
     @Test
     public void parseLineTest() {
         String testCaseStr = "81 : (1,53.38,€45) (2,88.62,€98) (3,78.48,€3) (4,72.30,€76) (5,30.18,€9) (6,46.34,€48)";
@@ -21,6 +24,9 @@ public class ParserTest {
     }
 
 
+    /**
+     * Test Parsing a string item, into Object of type Item.
+     */
     @Test
     public void parseItemTest() {
         String itemStr = "(1,53.38,€45)";

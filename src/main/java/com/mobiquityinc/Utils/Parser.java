@@ -1,5 +1,6 @@
 package com.mobiquityinc.Utils;
 
+import com.mobiquityinc.exception.APIException;
 import com.mobiquityinc.models.Item;
 import com.mobiquityinc.models.TestCase;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import java.util.List;
 
 /**
  * Take the file, return Things of each test case with its package(weightList)
+ *
  * @author ychlih
  */
 public class Parser {
@@ -30,26 +32,32 @@ public class Parser {
     public static TestCase parseLine(String testCase) {
 
         TestCase parsedTestCase = new TestCase();
-        List<Item> items = new ArrayList<>();
-        String[] testCaseArray = testCase.split(":");
-        logger.debug("Weight limit : {}, Els of this testCase : {}", testCaseArray[0], testCaseArray[1]);
-        parsedTestCase.setWeightLimit(Double.valueOf(testCaseArray[0].trim()));
+        try {
 
-        String[] itemsArray = testCaseArray[1].trim().split(" ");
+            List<Item> items = new ArrayList<>();
+            // The weight limit and the items are separated by `:
+            String[] testCaseArray = testCase.split(":");
+            logger.debug("Weight limit : {}, Els of this testCase : {}", testCaseArray[0], testCaseArray[1]);
+            parsedTestCase.setWeightLimit(Double.valueOf(testCaseArray[0].trim()));
+            // Item are separated by spaces : (xx,xx,$x) (xx,xx,$x)
+            String[] itemsArray = testCaseArray[1].trim().split(" ");
 
-        Item item;
-        for (int i = 0; i < itemsArray.length; i++) {
+            Item item;
+            for (int i = 0; i < itemsArray.length; i++) {
+                // Parse String item into an object Item
+                item = parseItem(itemsArray[i]);
+                // Max weight and cost of an item is ≤ 100
+                if ((item.getCost() <= ITEM_MAX_COST) && (item.getWeight() <= ITEM_MAX_WEIGHT)) {
+                    items.add(item);
+                }
 
-            item = parseItem(itemsArray[i]);
-            // Max weight and cost of an item is ≤ 100
-            if ((item.getCost() <= ITEM_MAX_COST) && (item.getWeight() <= ITEM_MAX_WEIGHT)) {
-                items.add(item);
             }
-
+            // Put the list of parsed Items into the Parsed testCase Object
+            parsedTestCase.setItems(items);
+            logger.debug("Weight Limit : {}, number of els {}", parsedTestCase.getWeightLimit(), parsedTestCase.getItems().size());
+        } catch (Exception e) {
+            throw new APIException("Test Case in bad format");
         }
-        parsedTestCase.setItems(items);
-        logger.debug("Weight Limit : {}, number of els {}", parsedTestCase.getWeightLimit(), parsedTestCase.getItems().size());
-
         return parsedTestCase;
     }
 
@@ -63,13 +71,19 @@ public class Parser {
     public static Item parseItem(String ItemStr) {
 
         logger.debug(" Parsing Item : {}", ItemStr);
+        // Remove the brackets in (xx,xx,$xx)
         String[] oneItemArray = ItemStr.substring(1, ItemStr.length() - 1).split(",");
         Item item = new Item();
-        item.setIndex(Integer.valueOf(oneItemArray[0]));
-        item.setWeight(Double.valueOf(oneItemArray[1]));
-        item.setCost(Double.valueOf(oneItemArray[2].replaceAll("[^0-9]", "")));
-        logger.debug("Parsed Item => Index: {} , weight: {}, Cost: {}", item.getIndex(), item.getWeight(), item.getCost());
+        try {
 
+            item.setIndex(Integer.valueOf(oneItemArray[0]));
+            item.setWeight(Double.valueOf(oneItemArray[1]));
+            // Remove the Currency sign in (xx,xx,$x)
+            item.setCost(Double.valueOf(oneItemArray[2].replaceAll("[^0-9]", "")));
+            logger.debug("Parsed Item => Index: {} , weight: {}, Cost: {}", item.getIndex(), item.getWeight(), item.getCost());
+        } catch (Exception e) {
+            throw new APIException("Item string in bad format");
+        }
         return item;
 
     }
