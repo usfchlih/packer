@@ -61,7 +61,7 @@ public class PackerTest {
      */
     @Test
     public void chooseItemsToPackTestCase1() {
-        // test case ==> 34 : (1,15.3,€34) (2,12,€30) (1,66,€22) : expected result 2,1
+        // test case ==> 34 : (1,15.3,€29) (2,12,€30) (3,66,€22) : expected result 2,1
 
         List<Item> items = new ArrayList<>();
 
@@ -109,10 +109,13 @@ public class PackerTest {
         assertEquals("2,7", result3);
     }
 
+    /**
+     * Items where method of sorting by ratio return better value
+     */
 
     @Test
     public void chooseItemsToPackTestCase3() {
-        // test case ==> 12 : (1,15.3,€34) (2,12,€30) (1,66,€22) : expected result 1,3
+        // test case ==> 12 : (1,4,€6) (2,9,€9) (3,4,€6) : expected result 1,3
         List<Item> items2 = new ArrayList<>();
         items2.addAll(
                 Arrays.asList(
@@ -130,9 +133,12 @@ public class PackerTest {
         assertEquals("3,1", result2);
     }
 
+    /**
+     * Items where method of sorting by ratio works
+     */
     @Test
     public void chooseItemsToPackTestCase4() {
-        // test case ==> 12 : (1,15.3,€34) (2,12,€30) (1,66,€22) : expected result 1,3
+        // test case ==> 13 : (1,5,€6) (2,9,€9) (3,4.5,€6.5) : expected result 1,3
         List<Item> items2 = new ArrayList<>();
         items2.addAll(
                 Arrays.asList(
@@ -144,6 +150,29 @@ public class PackerTest {
 
         TestCase testCase2 = new TestCase();
         testCase2.setWeightLimit(12.00);
+        testCase2.setItems(items2);
+        String result2 = chooseItemsToPack(testCase2);
+
+        assertEquals("3,1", result2);
+    }
+
+    /**
+     * Items with the same ratio, same weight and weight
+     */
+    @Test
+    public void chooseItemsToPackTestCase5() {
+        // test case ==> 13 : (1,6,€6) (2,9,€9) (3,6,€6) : expected result 1,3
+        List<Item> items2 = new ArrayList<>();
+        items2.addAll(
+                Arrays.asList(
+                        new Item(1, 6.00, 6.00),
+                        new Item(2, 9.00, 9.00),
+                        new Item(3, 6.00, 6.00)
+                )
+        );
+
+        TestCase testCase2 = new TestCase();
+        testCase2.setWeightLimit(13.00);
         testCase2.setItems(items2);
         String result2 = chooseItemsToPack(testCase2);
 
