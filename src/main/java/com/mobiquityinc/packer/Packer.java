@@ -42,10 +42,9 @@ public class Packer {
         }
         // Read file
         StringBuilder outputResult = new StringBuilder();
-        try {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
             String testCaseStringLine;
             TestCase parsedTestCase;
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
             //Read each line as a test case.
             while ((testCaseStringLine = bufferedReader.readLine()) != null) {
                 logger.debug("Test Case to Parse : {}", testCaseStringLine);
