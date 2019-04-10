@@ -49,8 +49,6 @@ Packer.pack("/absolutePath/file.txt")
 ```
 The method takes the absolute path.
 
-
-
 ## Running the tests
 
 The project includes a file with test cases in : src/test/resources/testCases.txt
@@ -65,14 +63,15 @@ Or directly from the IDE.
 
 The application has two main jobs, parse the file that contains the test cases into into POJOs, and choose from each test case the items to pack.
 
-There two method of getting package with highest cost and lowest weight:
+The solution of packing items combines the following two methods to obtain a combination of Items with Highest price, and eventually lowest weight if price is the same:
+
 ##### Method1 : Sort by Costs :
 To choose Items to pack, the items get sorted based on cost in descending order, for elements with same costs, they get sorted based on weight in ascending order.
-The method will start packing items with highest cost until the weight limit is reached : **first package candidate**.
+The method will start packing items with highest cost until the weight limit is reached : **first candidate package**.
 
 ##### Method 2 : Sort by Cost/weight Ratio:
-To choose Items to pack, Calculate Cost/weight ratio of each item, sort items in descending order based on this ratio. Items with highest ratio have high cost and low weight, they are good candidate to fill the package with.
-The method will start packing will start packing items with highest cost/weight ratio until the weight limit is reached : **second package candidate**.
+To choose Items to pack, Calculate Cost/weight ratio of each item, sort items in descending order based on this ratio. Items with highest ratio have high cost and low weight, they are good candidates to fill the package with.
+The method will start packing items with highest cost/weight ratio until the weight limit is reached : **second candidate package**.
 
 ##### Choose between the obtained packages :
 **Compare the two packages obtained by method1 and method2, pick the one with highest cost, if costs are the same, pick the one with the lowest weight.**
